@@ -101,8 +101,17 @@ apiRoutes.use(function(req, res, next) {
 
 //SuperAdmin Panel
 apiRoutes.get('/superadmin', function(req,res, next){
-  console.log("Querying token " + JSON.stringify(req.body) + " and lets check decoded " + JSON.stringify(req.decoded));
-    res.status(200).sendFile(__dirname + "/private/superadminpanel.html")
+  console.log("Querying token lets check decoded " + JSON.stringify(req.decoded));
+  if(req.decoded._doc.grantType = "superAdmin"){
+    console.log("Testing grant type " + req.decoded._doc.grantType);
+    req.decoded._doc.grantType = "";
+    res.status(200).sendFile(__dirname + "/private/superadminpanel.html");
+  } else{
+    res.status(403).send({
+      success: false,
+      message: "You do not have SuperAdmin privileges. "
+    });
+  }
 })
 
 // route to show a random message (GET http://localhost:8080/api/)
@@ -124,9 +133,9 @@ app.get('/setup', function(req, res) {
 
   // create a sample user
   var nick = new User({
-    name: 'Nick Cerminara',
-    password: 'password',
-    admin: true
+    name: "foo",
+    password: "bar",
+    grantType: "superAdmin"
   });
 
   // save the sample user
