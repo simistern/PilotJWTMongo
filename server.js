@@ -102,8 +102,8 @@ apiRoutes.use(function(req, res, next) {
 //SuperAdmin Panel
 apiRoutes.get('/superadmin', function(req,res, next){
   console.log("Querying token lets check decoded " + JSON.stringify(req.decoded));
-  if(req.decoded._doc.grantType = "superAdmin"){
-    console.log("Testing grant type " + req.decoded._doc.grantType);
+  if(req.decoded._doc.grantType === "superAdmin"){
+    console.log("Testing grant type " + JSON.stringify(req.decoded));
     req.decoded._doc.grantType = "";
     res.status(200).sendFile(__dirname + "/private/superadminpanel.html");
   } else{
@@ -133,8 +133,8 @@ app.get('/setup', function(req, res) {
 
   // create a sample user
   var nick = new User({
-    name: "foo",
-    password: "bar",
+    name: "bruce",
+    password: "wayne",
     grantType: "superAdmin"
   });
 
