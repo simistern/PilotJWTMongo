@@ -6,7 +6,7 @@ var app         = express();
 var bodyParser  = require('body-parser');
 var morgan      = require('morgan');
 var mongoose    = require('mongoose');
-
+var bcrypt = require("bcrypt");
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
 var User   = require('./app/models/user'); // get our mongoose model
@@ -48,6 +48,9 @@ apiRoutes.post('/authenticate', function(req, res) {
     if (!user) {
       res.json({ success: false, message: 'Authentication failed. User not found.' });
     } else if (user) {
+
+      var salt = bcrypt.genSaltSync(10);
+      var hash = bcrypt.hashSync("cruz", salt);
 
       // check if password matches
       if (user.password != req.body.password) {
@@ -131,10 +134,13 @@ app.use('/api', apiRoutes);
 
 app.get('/setup', function(req, res) {
 
+  var salt = bcrypt.genSaltSync(10);
+  var hash = bcrypt.hashSync("cruz", salt);
+
   // create a sample user
   var nick = new User({
-    name: "bruce",
-    password: "wayne",
+    name: "terry",
+    password: hash,
     grantType: "superAdmin"
   });
 
