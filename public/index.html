@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html>
+  <body ng-app="pilotLogin" ng-controller="controller">
+    <link rel="stylesheet" href="/style.css"/>
+
+    <h1>User + Password OAuth2 Flow</h1>
+
+    <div class="box">
+      <h2>Sign Up</h2>
+      <h3>Client ID (User Identification)</h3>
+      <input type="text" ng-model="signup.clientId"/>
+      <h3>Client Secret (Password)</h3>
+      <input type="text" ng-model="signup.clientSecret"/>
+
+      <h3>Grant Type (Account Type)</h3>
+      <input type="radio" ng-model="signup.grantType" value="customer"/>
+      <p>Customer</p>
+      <input type="radio" ng-model="signup.grantType" value="admin"/>
+      <p>Admin</p>
+
+      <button ng-click="signupEvent()">Sign Up</button>
+    </div>
+
+    <div class="box" position="float-right">
+      <h2>Login</h2>
+
+      <h3>Client ID (User Identification)</h3>
+      <input type="text" ng-model="login.clientId"/>
+      <h3>Client Secret (Password)</h3>
+      <input type="text" ng-model="login.clientSecret"/>
+      <h3>Grant Type (Account Type)</h3>
+      <input type="radio" ng-model="login.grantType" value="customer"/>
+      <p>Customer</p>
+      <input type="radio" ng-model="login.grantType" value="admin"/>
+      <p>Admin</p>
+
+      <button ng-click="loginEvent()">Login</button>
+
+      <p>Access Token: {{accessToken}}</p>
+    </div>
+    <div> <button ng-click="loginEvent()">Login</button>  </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.2/angular.min.js"> </script>
+    <script src="./frontend.js"></script>
+  </body>
+</html>

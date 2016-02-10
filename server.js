@@ -23,11 +23,13 @@ app.use(bodyParser.json());
 
 app.use(morgan('dev'));
 
+app.use(express.static("./public"));
+
 // =======================
 // routes ================
 // =======================
 app.get('/', function(req, res) {
-    res.send('Hello! The API is at http://localhost:' + port + '/api');
+  res.status(200).sendFile(__dirname + "/public/index.html");
 });
 
 var apiRoutes = express.Router();
@@ -61,6 +63,54 @@ apiRoutes.post('/authenticate', function(req, res) {
     }
   });
 });
+
+// apply the /api prefix to our routes
+app.use('/api', apiRoutes);
+
+apiRoutes.post('/register', function(req, res) {
+
+  var salt = bcrypt.genSaltSync(10);
+  var hash = bcrypt.hashSync(req.body.clientSecret, salt);
+  var err = false;
+  var msg = [];
+
+  if(!req.body.clientId){
+    err = true;
+    msg.push("Please supply a Username")
+  }
+
+  if(!req.body.clientSecret){
+    err = true;
+    msg.push("please supply a password")
+  }
+
+  if (err == true){
+    return res.status(400).send({
+      "msg": msg
+    })
+  }
+
+  var nick = new User({
+    name: req.body.clientId,
+    password: hash,
+    grantType: "undeclared"
+  })
+  /* //create a sample user
+  var nick = new User({
+    name: "terry",
+    password: hash,
+    grantType: "superAdmin"
+  });*/
+
+  // save the user
+  nick.save(function(err) {
+    if (err) throw err;
+
+    console.log('User saved successfully');
+    res.json({ success: true });
+  });
+});
+
 
 apiRoutes.use(function(req, res, next) {
   var token = req.body.token || req.query.token || req.headers['x-access-token'];
@@ -109,30 +159,6 @@ apiRoutes.get('/', function(req, res) {
 apiRoutes.get('/users', function(req, res) {
   User.find({}, function(err, users) {
     res.json(users);
-  });
-});
-
-// apply the routes to our application with the prefix /api
-app.use('/api', apiRoutes);
-
-app.get('/setup', function(req, res) {
-
-  var salt = bcrypt.genSaltSync(10);
-  var hash = bcrypt.hashSync("cruz", salt);
-
-  // create a sample user
-  var nick = new User({
-    name: "terry",
-    password: hash,
-    grantType: "superAdmin"
-  });
-
-  // save the sample user
-  nick.save(function(err) {
-    if (err) throw err;
-
-    console.log('User saved successfully');
-    res.json({ success: true });
   });
 });
 
