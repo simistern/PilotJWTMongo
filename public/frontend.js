@@ -30,24 +30,17 @@ app.controller("controller", function($scope, $http, $location){
   }
 
   $scope.loginEvent = function(){
+    //console.log("Checking client ticket " + JSON.stringify($scope.login));
     $http({
       "method": "POST",
-      "url": "/login",
+      "url": "/api/authenticate",
       "data":{
         "client": $scope.login
       }
     }).then(function(res){
-      $scope.accessToken = res.data.accessToken;
-      console.log("checking access token " + $scope.accessToken);
-      if($scope.login.grantType == "customer"){
-        //window.location.assign("/clientticketsubmit.html");
-    }else if($scope.login.grantType == "admin"){
-      // window.location.assign("/ticketadminpage.html");
-    }
-    else{
-        console.log("Checking client ticket " + JSON.stringify($scope.login));
-        //alert("Sorry you are not customer");
-      }
+      $scope.accessToken = res.data.token;
+      console.log("Access Token " + $scope.accessToken);
+    //  window.location.assign("/superadminpanel.html");
       //alert("user Logged in!");
     }, function(err){
       alert("Please try again");

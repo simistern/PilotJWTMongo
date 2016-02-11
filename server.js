@@ -33,24 +33,23 @@ app.get('/', function(req, res) {
 });
 
 var apiRoutes = express.Router();
-
-//Checks if username/password correct (attach to login view in front end)
-apiRoutes.post('/authenticate', function(req, res) {
+app.use('/api', apiRoutes);                                           // apply the /api prefix to our routes
+apiRoutes.post('/authenticate', function(req, res) {                  //Checks if username/password correct (attach to login view in front end)
+  console.log("Checking request body " + JSON.stringify(req.body));
   User.findOne({
-    name: req.body.name
+    name: req.body.client.clientId
   }, function(err, user) {
-
     if (err) throw err;
-
+    console.log("Checking request body " + JSON.stringify(req.body.client.clientId) + "and checking name " + JSON.stringify(user));
     if (!user) {
       res.json({ success: false, message: 'Authentication failed. User not found.' });
     } else if (user) {
-
       // check if hashed password matches
-      if (!(bcrypt.compareSync(req.body.password, user.password))) {
+      if (!(bcrypt.compareSync(req.body.client.clientSecret, user.password))) {
         res.json({ success: false, message: 'Authentication failed. Wrong password.' });
       } else {
         // create a token
+        console.log("token Created");
         var token = jwt.sign(user, app.get('superSecret'), {
           expiresInMinutes: 1440
         });
@@ -63,9 +62,6 @@ apiRoutes.post('/authenticate', function(req, res) {
     }
   });
 });
-
-// apply the /api prefix to our routes
-app.use('/api', apiRoutes);
 
 apiRoutes.post('/register', function(req, res) {
 
