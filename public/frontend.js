@@ -38,9 +38,9 @@ app.controller("controller", function($scope, $http, $location){
         "client": $scope.login
       }
     }).then(function(res){
-      console.log("Checking response to login event " + JSON.stringify(res));
+      console.log("Checking token first time " + JSON.stringify(res.data.token));
       $scope.accessToken = res.data.token;
-      $scope.goToAdminPanel();
+      $scope.goToAdminPanel(res.data.token);
       //window.location.assign("/superadminpanel.html");
       //alert("user Logged in!");
     }, function(err){
@@ -48,9 +48,14 @@ app.controller("controller", function($scope, $http, $location){
     })
   }
 
-  $scope.goToAdminPanel = function(){
+  $scope.goToAdminPanel = function(token){
+    console.log("Checking token second time " + JSON.stringify(token));
     $http({
       "method": "GET",
-      "url" : "/api/superadmin"
-    })}
-})
+      "url" : "/api/superadmin",
+      "data" : token
+    }).then(function(res){
+        console.log("Checking response this time " + JSON.stringify(res))
+    })
+  }
+});

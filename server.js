@@ -43,25 +43,19 @@ var apiRoutes = express.Router();
 app.use('/api', apiRoutes);
 
 apiRoutes.post('/register', function(req, res) {
-
   var err = false;
   var msg = [];
-
   if(!req.body.clientId){
     err = true;
     msg.push("Please supply a Username")
   }
-
   if(!req.body.clientSecret){
     err = true;
     msg.push("please supply a password")
   }
-
   var salt = bcrypt.genSaltSync(10);
   var hash = bcrypt.hashSync(req.body.clientSecret, salt);
-
   if (err == true){ return res.status(400).send({"msg": msg}) };
-
   r.db("testDB").table("PilotUsers").filter({
     "name": req.body.clientId
   }).count().then(function(rows) {
@@ -89,11 +83,16 @@ apiRoutes.post('/authenticate', function(req, res) {                  //Checks i
       });
     } else {
       var token = jwt.sign(user[0], app.get('superSecret'), {expiresInMinutes: 1440});
-      console.log("Chris Cates for mayor and president " + JSON.stringify(token));
-      res.json({
-        success: true,
-        message: 'Enjoy your token!',
-        token: token
+      //console.log("Chris Cates for mayor and president " + JSON.stringify(token));
+      r.db("testDB").table("userTokens").insert({
+        "clientId": user[0].clientId,
+        "token" : token
+      }).then(function() {
+        res.json({
+          success: true,
+          message: 'Enjoy your token!',
+          token: token
+        });
       });
     }
   });
@@ -106,8 +105,8 @@ apiRoutes.use(function(req, res, next) {
   var token1 = req.body.token;
   var token2 = req.query.token;
   var token3 = req.headers['x-access-token'];
-  console.log("Lets check on every single token " + JSON.stringify(token1) + "and another one " + JSON.stringify(token2) + "and another one " + JSON.stringify(token3)  + "and another one ");
- console.log("You can be anything you want " + JSON.stringify(token));
+//  console.log("Lets check on every single token " + JSON.stringify(token1) + "and another one " + JSON.stringify(token2) + "and another one " + JSON.stringify(token3)  + "and another one ");
+ //console.log("You can be anything you want " + JSON.stringify(token));
   if (token) {
     // verifies secret and checks exp
     jwt.verify(token, app.get('superSecret'), function(err, decoded) {
@@ -133,7 +132,8 @@ apiRoutes.use(function(req, res, next) {
 
 //SuperAdmin Panel
 apiRoutes.get('/superadmin', function(req,res, next){
-  //console.log("Querying token lets check decoded " + JSON.stringify(req.decoded));
+  console.log("Querying req.decoded if that works " + JSON.stringify(req.decoded));
+  console.log("checking third time on token " + JSON.stringify(req.data));
   if(req.decoded._doc.grantType === "superAdmin"){
     //console.log("Testing grant type " + JSON.stringify(req.decoded));
     //req.decoded._doc.grantType = "";
