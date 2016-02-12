@@ -38,10 +38,10 @@ app.controller("controller", function($scope, $http, $location){
         "client": $scope.login
       }
     }).then(function(res){
+      console.log("Checking response to login event " + JSON.stringify(res));
       $scope.accessToken = res.data.token;
-      console.log("Access Token " + $scope.accessToken);
       $scope.goToAdminPanel();
-      window.location.assign("/superadminpanel.html");
+      //window.location.assign("/superadminpanel.html");
       //alert("user Logged in!");
     }, function(err){
       alert("Please try again");

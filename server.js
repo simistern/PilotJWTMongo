@@ -42,31 +42,6 @@ app.get('/', function(req, res) {
 var apiRoutes = express.Router();
 app.use('/api', apiRoutes);
 
-
-apiRoutes.post('/authenticate', function(req, res) {                  //Checks if username/password correct (attach to login view in front end)
-console.log("Checking client ID " + JSON.stringify(req.body));
-  r.db("testDB").table("PilotUsers").filter({
-    clientId: req.body.client.clientId
-  }).then(function(user){
-    var username = user.clientId;
-    console.log("How can she slap " + username);
-    //console.log("checking filtered body object bruh " + JSON.stringify(user.client.clientId));
-    /*if (!(bcrypt.compareSync(req.body.client.clientSecret, user.clientSecret))) {
-      res.json({
-        success: false,
-        message: 'Authentication failed. Wrong password.'
-      });
-    } else {
-      var token = jwt.sign(user.clientId, app.get('superSecret'), {expiresInMinutes: 1440});
-      res.json({
-        success: true,
-        message: 'Enjoy your token!',
-        token: token
-      });
-    }*/
-  });
-});
-
 apiRoutes.post('/register', function(req, res) {
 
   var err = false;
@@ -102,8 +77,37 @@ apiRoutes.post('/register', function(req, res) {
   });
 });
 
+apiRoutes.post('/authenticate', function(req, res) {                  //Checks if username/password correct (attach to login view in front end)
+  r.db("testDB").table("PilotUsers").filter({
+    clientId: req.body.client.clientId
+  }).then(function(user){
+    var userpassword = user[0].clientSecret;
+    if (!(bcrypt.compareSync(req.body.client.clientSecret, userpassword))) {
+      res.json({
+        success: false,
+        message: 'Authentication failed. Wrong password.'
+      });
+    } else {
+      var token = jwt.sign(user[0], app.get('superSecret'), {expiresInMinutes: 1440});
+      console.log("Chris Cates for mayor and president " + JSON.stringify(token));
+      res.json({
+        success: true,
+        message: 'Enjoy your token!',
+        token: token
+      });
+    }
+  });
+});
+
+
 apiRoutes.use(function(req, res, next) {
+//  var token = req.body.token || req.query.token || req.headers['x-access-token'];
   var token = req.body.token || req.query.token || req.headers['x-access-token'];
+  var token1 = req.body.token;
+  var token2 = req.query.token;
+  var token3 = req.headers['x-access-token'];
+  console.log("Lets check on every single token " + JSON.stringify(token1) + "and another one " + JSON.stringify(token2) + "and another one " + JSON.stringify(token3)  + "and another one ");
+ console.log("You can be anything you want " + JSON.stringify(token));
   if (token) {
     // verifies secret and checks exp
     jwt.verify(token, app.get('superSecret'), function(err, decoded) {
