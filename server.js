@@ -5,11 +5,11 @@ var express     = require('express');
 var app         = express();
 var bodyParser  = require('body-parser');
 var morgan      = require('morgan');
-var mongoose    = require('mongoose');
+//var mongoose    = require('mongoose');
 var bcrypt = require("bcrypt");
 var jwt    = require('jsonwebtoken');
 var config = require('./config');
-var User   = require('./app/models/user');
+//var User   = require('./app/models/user');
 var r = require("rethinkdbdash")();
 require("rethink-config")({
   "r": r,
@@ -21,7 +21,7 @@ require("rethink-config")({
 // configuration =========
 // =======================
 var port = process.env.PORT || 3000;
-mongoose.connect(config.database);
+//mongoose.connect(config.database);
 app.set('superSecret', config.secret);
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -44,42 +44,31 @@ app.use('/api', apiRoutes);
 
 
 apiRoutes.post('/authenticate', function(req, res) {                  //Checks if username/password correct (attach to login view in front end)
-  console.log("Checking request body " + JSON.stringify(req.body));
-  User.findOne({
-    name: req.body.client.clientId
-  }, function(err, user) {
-    if (err){
-      console.log("DANGER DANGER YOUNG ROBINSON");
-      throw err;
-    }
-    console.log("Checking name specifically " + JSON.stringify(req.body.client.clientId) + "and checking name " + JSON.stringify(user));
-    if (!user) {
-      res.json({ success: false, message: 'Authentication failed. User not found.' });
-    } else if (user) {
-      // check if hashed password matches
-      if (!(bcrypt.compareSync(req.body.client.clientSecret, user.password))) {
-        res.json({ success: false, message: 'Authentication failed. Wrong password.' });
-      } else {
-        // create a token
-        var token = jwt.sign(user, app.get('superSecret'), {
-          expiresInMinutes: 1440
-        });
-        console.log("token Created");
-      //  res.status(200).sendFile(__dirname + "/private/superadminpanel.html");
-        res.json({
-          success: true,
-          message: 'Enjoy your token!',
-          token: token
-        });
-      }
-    }
+console.log("Checking client ID " + JSON.stringify(req.body));
+  r.db("testDB").table("PilotUsers").filter({
+    clientId: req.body.client.clientId
+  }).then(function(user){
+    var username = user.clientId;
+    console.log("How can she slap " + username);
+    //console.log("checking filtered body object bruh " + JSON.stringify(user.client.clientId));
+    /*if (!(bcrypt.compareSync(req.body.client.clientSecret, user.clientSecret))) {
+      res.json({
+        success: false,
+        message: 'Authentication failed. Wrong password.'
+      });
+    } else {
+      var token = jwt.sign(user.clientId, app.get('superSecret'), {expiresInMinutes: 1440});
+      res.json({
+        success: true,
+        message: 'Enjoy your token!',
+        token: token
+      });
+    }*/
   });
 });
 
 apiRoutes.post('/register', function(req, res) {
 
-  var salt = bcrypt.genSaltSync(10);
-  var hash = bcrypt.hashSync(req.body.clientSecret, salt);
   var err = false;
   var msg = [];
 
@@ -93,33 +82,25 @@ apiRoutes.post('/register', function(req, res) {
     msg.push("please supply a password")
   }
 
-  if (err == true){
-    return res.status(400).send({
-      "msg": msg
-    })
-  }
+  var salt = bcrypt.genSaltSync(10);
+  var hash = bcrypt.hashSync(req.body.clientSecret, salt);
 
-  var nick = new User({
-    name: req.body.clientId,
-    password: hash,
-    grantType: "undeclared"
-  })
-  /* //create a sample user
-  var nick = new User({
-    name: "terry",
-    password: hash,
-    grantType: "superAdmin"
-  });*/
+  if (err == true){ return res.status(400).send({"msg": msg}) };
 
-  // save the user
-  nick.save(function(err) {
-    if (err) throw err;
-
-    console.log('User saved successfully');
-    res.json({ success: true });
+  r.db("testDB").table("PilotUsers").filter({
+    "name": req.body.clientId
+  }).count().then(function(rows) {
+     if (rows == 0) {
+       r.db("testDB").table("PilotUsers").insert({
+         "clientId": req.body.clientId,
+         "clientSecret": hash,
+         "grantType": "superAdmin"
+       }).then(function() {
+           res.json({success: "true"})
+       });
+     }
   });
 });
-
 
 apiRoutes.use(function(req, res, next) {
   var token = req.body.token || req.query.token || req.headers['x-access-token'];
@@ -148,9 +129,9 @@ apiRoutes.use(function(req, res, next) {
 
 //SuperAdmin Panel
 apiRoutes.get('/superadmin', function(req,res, next){
-  console.log("Querying token lets check decoded " + JSON.stringify(req.decoded));
+  //console.log("Querying token lets check decoded " + JSON.stringify(req.decoded));
   if(req.decoded._doc.grantType === "superAdmin"){
-    console.log("Testing grant type " + JSON.stringify(req.decoded));
+    //console.log("Testing grant type " + JSON.stringify(req.decoded));
     //req.decoded._doc.grantType = "";
   //  res.status(200).sendFile(__dirname + "/private/superadminpanel.html");
   } else{
