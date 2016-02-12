@@ -10,6 +10,12 @@ var bcrypt = require("bcrypt");
 var jwt    = require('jsonwebtoken');
 var config = require('./config');
 var User   = require('./app/models/user');
+var r = require("rethinkdbdash")();
+require("rethink-config")({
+  "r": r,
+  "database": "testDB",
+  "tables": ["PilotUsers"]
+});
 
 // =======================
 // configuration =========
