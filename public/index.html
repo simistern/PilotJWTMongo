@@ -1,6 +1,14 @@
 <!DOCTYPE HTML>
 <html>
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- Remove Tap Highlight on Windows Phone IE -->
+  <meta name="msapplication-tap-highlight" content="no"/>
+
+  <link rel="icon" type="image/png" href="assets/img/favicon-16x16.png" sizes="16x16">
+  <link rel="icon" type="image/png" href="assets/img/favicon-32x32.png" sizes="32x32">
   <!-- uikit -->
   <link rel="stylesheet" href="bower_components/uikit/css/uikit.almost-flat.min.css" media="all">
 
@@ -10,11 +18,19 @@
   <!-- altair admin -->
   <link rel="stylesheet" href="assets/css/main.min.css" media="all">
 
+  <!-- common functions -->
+  <script src="assets/js/common.min.js"></script>
+  <!-- uikit functions -->
+  <script src="assets/js/uikit_custom.min.js"></script>
+  <!-- altair common functions/helpers -->
+  <script src="assets/js/altair_admin_common.min.js"></script>
+
   <!-- matchMedia polyfill for testing media queries in JS -->
   <!--[if lte IE 9]>
       <script type="text/javascript" src="bower_components/matchMedia/matchMedia.js"></script>
       <script type="text/javascript" src="bower_components/matchMedia/matchMedia.addListener.js"></script>
   <![endif]-->
+
 </head>
   <body ng-app="pilotLogin" ng-controller="controller"  class=" sidebar_main_open sidebar_main_swipe">
     <link rel="stylesheet" href="/style.css"/>
@@ -23,17 +39,14 @@
     <header id="header_main">
         <div class="header_main_content">
             <nav class="uk-navbar">
-
                 <!-- main sidebar switch -->
                 <a href="#" id="sidebar_main_toggle" class="sSwitch sSwitch_left">
                     <span class="sSwitchIcon"></span>
                 </a>
-
                 <!-- secondary sidebar switch -->
                 <a href="#" id="sidebar_secondary_toggle" class="sSwitch sSwitch_right sidebar_secondary_check">
                     <span class="sSwitchIcon"></span>
                 </a>
-
                     <div id="menu_top_dropdown" class="uk-float-left uk-hidden-small">
                         <div class="uk-button-dropdown" data-uk-dropdown="{mode:'click'}">
                             <a href="#" class="top_menu_toggle"><i class="material-icons md-24">&#xE8F0;</i></a>
@@ -87,7 +100,7 @@
                         <li><a href="#" id="full_screen_toggle" class="user_action_icon uk-visible-large"><i class="material-icons md-24 md-light">&#xE5D0;</i></a></li>
                         <li><a href="#" id="main_search_btn" class="user_action_icon"><i class="material-icons md-24 md-light">&#xE8B6;</i></a></li>
                         <li data-uk-dropdown="{mode:'click',pos:'bottom-right'}">
-                            <a href="#" class="user_action_icon"><i class="material-icons md-24 md-light">&#xE7F4;</i><span class="uk-badge">16</span></a>
+                            <a href="#" class="user_action_icon"><i class="material-icons md-24 md-light">&#xE7F4;</i><span class="uk-badge">40</span></a>
                             <div class="uk-dropdown uk-dropdown-xlarge">
                                 <div class="md-card-content">
                                     <ul class="uk-tab uk-tab-grid" data-uk-tab="{connect:'#header_alerts',animation:'slide-horizontal'}">
@@ -236,183 +249,6 @@
                         <span class="menu_title">Dashboard</span>
                     </a>
                 </li>
-                <li title="Mailbox">
-                    <a href="page_mailbox.html">
-                        <span class="menu_icon"><i class="material-icons">&#xE158;</i></span>
-                        <span class="menu_title">Mailbox</span>
-                    </a>
-                </li>
-                <li title="Invoices">
-                    <a href="page_invoices.html">
-                        <span class="menu_icon"><i class="material-icons">&#xE53E;</i></span>
-                        <span class="menu_title">Invoices</span>
-                    </a>
-                </li>
-                <li  title="Chat">
-                    <a href="page_chat.html">
-                        <span class="menu_icon"><i class="material-icons">&#xE0B9;</i></span>
-                        <span class="menu_title">Chat</span>
-                    </a>
-                </li>
-                <li title="Scrum Board">
-                    <a href="page_scrum_board.html">
-                        <span class="menu_icon"><i class="material-icons">&#xE85C;</i></span>
-                        <span class="menu_title">Scrum Board</span>
-                    </a>
-                </li>
-                <li title="Snippets">
-                    <a href="page_snippets.html">
-                        <span class="menu_icon"><i class="material-icons">&#xE86F;</i></span>
-                        <span class="menu_title">Snippets</span>
-                    </a>
-                </li>
-                <li title="User Profile">
-                    <a href="page_user_profile.html">
-                        <span class="menu_icon"><i class="material-icons">&#xE87C;</i></span>
-                        <span class="menu_title">User Profile</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <span class="menu_icon"><i class="material-icons">&#xE8D2;</i></span>
-                        <span class="menu_title">Forms</span>
-                    </a>
-                    <ul>
-                        <li><a href="forms_regular.html">Regular Elements</a></li>
-                        <li><a href="forms_advanced.html">Advanced Elements</a></li>
-                        <li><a href="forms_file_input.html">File Input</a></li>
-                        <li><a href="forms_file_upload.html">File Upload</a></li>
-                        <li><a href="forms_validation.html">Validation</a></li>
-                        <li><a href="forms_wizard.html">Wizard</a></li>
-                        <li class="menu_subtitle">WYSIWYG Editors</li>
-                        <li><a href="forms_wysiwyg_ckeditor.html">CKeditor</a></li>
-                        <li><a href="forms_wysiwyg_tinymce.html">TinyMCE</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">
-                        <span class="menu_icon"><i class="material-icons">&#xE8F1;</i></span>
-                        <span class="menu_title">Layout</span>
-                    </a>
-                    <ul>
-                        <li><a href="layout_top_menu.html">Top Menu</a></li>
-                        <li><a href="layout_header_full.html">Full Header</a></li>
-                    </ul>
-                </li>
-
-                <li>
-                    <a href="#">
-                        <span class="menu_icon"><i class="material-icons">&#xE1BD;</i></span>
-                        <span class="menu_title">Kendo UI Widgets</span>
-                    </a>
-                    <ul>
-                        <li><a href="kendoui_autocomplete.html">Autocomplete</a></li>
-                        <li><a href="kendoui_calendar.html">Calendar</a></li>
-                        <li><a href="kendoui_colorpicker.html">ColorPicker</a></li>
-                        <li><a href="kendoui_combobox.html">ComboBox</a></li>
-                        <li><a href="kendoui_datepicker.html">DatePicker</a></li>
-                        <li><a href="kendoui_datetimepicker.html">DateTimePicker</a></li>
-                        <li><a href="kendoui_dropdown_list.html">DropDownList</a></li>
-                        <li><a href="kendoui_masked_input.html">Masked Input</a></li>
-                        <li><a href="kendoui_menu.html">Menu</a></li>
-                        <li><a href="kendoui_multiselect.html">MultiSelect</a></li>
-                        <li><a href="kendoui_numeric_textbox.html">Numeric TextBox</a></li>
-                        <li><a href="kendoui_panelbar.html">PanelBar</a></li>
-                        <li><a href="kendoui_timepicker.html">TimePicker</a></li>
-                        <li><a href="kendoui_toolbar.html">Toolbar</a></li>
-                        <li><a href="kendoui_window.html">Window</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">
-                        <span class="menu_icon"><i class="material-icons">&#xE87B;</i></span>
-                        <span class="menu_title">Components</span>
-                    </a>
-                    <ul>
-                        <li class="act_item"><a href="components_accordion.html">Accordions</a></li>
-                        <li><a href="components_buttons.html">Buttons</a></li>
-                        <li><a href="components_fab.html">Buttons: FAB</a></li>
-                        <li><a href="components_cards.html">Cards</a></li>
-                        <li><a href="components_colors.html">Colors</a></li>
-                        <li><a href="components_common.html">Common</a></li>
-                        <li><a href="components_dropdowns.html">Dropdowns</a></li>
-                        <li><a href="components_dynamic_grid.html">Dynamic Grid</a></li>
-                        <li><a href="components_grid.html">Grid</a></li>
-                        <li><a href="components_icons.html">Icons</a></li>
-                        <li><a href="components_modal.html">Lightbox/Modal</a></li>
-                        <li><a href="components_lists.html">Lists</a></li>
-                        <li><a href="components_nestable.html">Nestable</a></li>
-                        <li><a href="components_notifications.html">Notifications</a></li>
-                        <li><a href="components_panels.html">Panels</a></li>
-                        <li><a href="components_preloaders.html">Preloaders</a></li>
-                        <li><a href="components_slideshow.html">Slideshow</a></li>
-                        <li><a href="components_sortable.html">Sortable</a></li>
-                        <li><a href="components_tables.html">Tables</a></li>
-                        <li><a href="components_tables_examples.html">Tables Examples</a></li>
-                        <li><a href="components_tabs.html">Tabs</a></li>
-                        <li><a href="components_tooltips.html">Tooltips</a></li>
-                        <li><a href="components_typography.html">Typography</a></li>
-                    </ul>
-                </li>
-                <li >
-                    <a href="#">
-                        <span class="menu_icon"><i class="material-icons">&#xE8CB;</i></span>
-                        <span class="menu_title">E-commerce</span>
-                    </a>
-                    <ul>
-                        <li><a href="ecommerce_product_details.html">Product Details</a></li>
-                        <li><a href="ecommerce_product_edit.html">Product Edit</a></li>
-                        <li><a href="ecommerce_products_grid.html">Products Grid</a></li>
-                        <li><a href="ecommerce_products_list.html">Products List</a></li>
-                    </ul>
-                </li>
-                <li >
-                    <a href="#">
-                        <span class="menu_icon"><i class="material-icons">&#xE8C0;</i></span>
-                        <span class="menu_title">Plugins</span>
-                    </a>
-                    <ul>
-                        <li><a href="plugins_calendar.html">Calendar</a></li>
-                        <li><a href="plugins_charts.html">Charts</a></li>
-                        <li><a href="plugins_code_editor.html">Code Editor</a></li>
-                        <li><a href="plugins_crud_table.html">CRUD Table</a></li>
-                        <li><a href="plugins_datatables.html">Datatables</a></li>
-                        <li><a href="plugins_diff.html">Diff View</a></li>
-                        <li><a href="plugins_gantt_chart.html">Gantt Chart</a></li>
-                        <li><a href="plugins_google_maps.html">Google Maps</a></li>
-                        <li><a href="plugins_tablesorter.html">Tablesorter</a></li>
-                        <li><a href="plugins_tree.html">Tree</a></li>
-                        <li><a href="plugins_vector_maps.html">Vector Maps</a></li>
-                    </ul>
-                </li>
-                <li >
-                    <a href="#">
-                        <span class="menu_icon"><i class="material-icons">&#xE24D;</i></span>
-                        <span class="menu_title">Pages</span>
-                    </a>
-                    <ul>
-                        <li><a href="page_blank.html">Blank</a></li>
-                        <li><a href="page_contact_list.html">Contact List</a></li>
-                        <li><a href="page_gallery.html">Gallery</a></li>
-                        <li><a href="page_help.html">Help/Faq</a></li>
-                        <li><a href="login.html">Login Page</a></li>
-                        <li><a href="page_notes.html">Notes</a></li>
-                        <li><a href="page_pricing_tables.html">Pricing Tables</a></li>
-                        <li><a href="page_settings.html">Settings</a></li>
-                        <li><a href="page_todo.html">Todo</a></li>
-                        <li><a href="page_user_edit.html">User edit</a></li>
-                        <li class="menu_subtitle">Issue Tracker</li>
-                        <li><a href="page_issues_list.html">List View</a></li>
-                        <li><a href="page_issue_details.html">Issue Details</a></li>
-
-                        <li class="menu_subtitle">Blog</li>
-                        <li><a href="page_blog_list.html">Blog List</a></li>
-                        <li><a href="page_blog_article.html">Blog Article</a></li>
-                        <li class="menu_subtitle">Errors</li>
-                        <li><a href="error_404.html">Error 404</a></li>
-                        <li><a href="error_500.html">Error 500</a></li>
-                    </ul>
-                </li>
                 <li>
                     <a href="#">
                         <span class="menu_icon"><i class="material-icons">&#xE241;</i></span>
@@ -463,7 +299,7 @@
 
     <h1>User + Password OAuth2 Flow</h1>
 
-    <div class="box">
+    <div class="box signup">
       <h2>Sign Up</h2>
       <h3>Client ID (User Identification)</h3>
       <input type="text" ng-model="signup.clientId"/>
@@ -496,6 +332,7 @@
       <p>Access Token: {{accessToken}}</p>
     </div>
 
+<script src="https://code.jquery.com/jquery-2.2.0.js"> </script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.2/angular.min.js"> </script>
     <script src="./frontend.js"></script>
     <script>
@@ -507,7 +344,6 @@
                 $boxed_layout_toggle = $('#style_layout_boxed'),
                 $accordion_mode_toggle = $('#accordion_mode_main_menu'),
                 $body = $('body');
-
 
             $switcher_toggle.click(function(e) {
                 e.preventDefault();

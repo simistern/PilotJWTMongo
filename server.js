@@ -32,15 +32,21 @@ app.get('/', function(req, res) {
   res.status(200).sendFile(__dirname + "/public/index.html");
 });
 
+// apply the /api prefix to our routes
 var apiRoutes = express.Router();
-app.use('/api', apiRoutes);                                           // apply the /api prefix to our routes
+app.use('/api', apiRoutes);
+
+
 apiRoutes.post('/authenticate', function(req, res) {                  //Checks if username/password correct (attach to login view in front end)
   console.log("Checking request body " + JSON.stringify(req.body));
   User.findOne({
     name: req.body.client.clientId
   }, function(err, user) {
-    if (err) throw err;
-    console.log("Checking request body " + JSON.stringify(req.body.client.clientId) + "and checking name " + JSON.stringify(user));
+    if (err){
+      console.log("DANGER DANGER YOUNG ROBINSON");
+      throw err;
+    }
+    console.log("Checking name specifically " + JSON.stringify(req.body.client.clientId) + "and checking name " + JSON.stringify(user));
     if (!user) {
       res.json({ success: false, message: 'Authentication failed. User not found.' });
     } else if (user) {
@@ -49,10 +55,11 @@ apiRoutes.post('/authenticate', function(req, res) {                  //Checks i
         res.json({ success: false, message: 'Authentication failed. Wrong password.' });
       } else {
         // create a token
-        console.log("token Created");
         var token = jwt.sign(user, app.get('superSecret'), {
           expiresInMinutes: 1440
         });
+        console.log("token Created");
+      //  res.status(200).sendFile(__dirname + "/private/superadminpanel.html");
         res.json({
           success: true,
           message: 'Enjoy your token!',
@@ -138,8 +145,8 @@ apiRoutes.get('/superadmin', function(req,res, next){
   console.log("Querying token lets check decoded " + JSON.stringify(req.decoded));
   if(req.decoded._doc.grantType === "superAdmin"){
     console.log("Testing grant type " + JSON.stringify(req.decoded));
-    req.decoded._doc.grantType = "";
-    res.status(200).sendFile(__dirname + "/private/superadminpanel.html");
+    //req.decoded._doc.grantType = "";
+  //  res.status(200).sendFile(__dirname + "/private/superadminpanel.html");
   } else{
     res.status(403).send({
       success: false,

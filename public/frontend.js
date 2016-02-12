@@ -40,10 +40,17 @@ app.controller("controller", function($scope, $http, $location){
     }).then(function(res){
       $scope.accessToken = res.data.token;
       console.log("Access Token " + $scope.accessToken);
-    //  window.location.assign("/superadminpanel.html");
+      $scope.goToAdminPanel();
+      window.location.assign("/superadminpanel.html");
       //alert("user Logged in!");
     }, function(err){
       alert("Please try again");
     })
   }
+
+  $scope.goToAdminPanel = function(){
+    $http({
+      "method": "GET",
+      "url" : "/api/superadmin"
+    })}
 })
